@@ -22,7 +22,7 @@ class AppLayout extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lights Out'),
-        backgroundColor: Colors.red[600],
+        backgroundColor: Colors.grey[900],
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
@@ -41,10 +41,10 @@ class AppLayout extends StatelessWidget {
         ],
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Use spaceBetween to push footer down
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded( // Use Expanded to allow the content to take available space
+          Expanded(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/race_provider.dart';
 import '../widgets/app_layout.dart';
 
@@ -47,12 +48,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             opacity: _fadeAnimation,
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.red[600]!, Colors.red[800]!],
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFB71C1C), Color(0xFFFF5252), Color(0xFFB71C1C)],
                 ),
                 borderRadius: BorderRadius.circular(16),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 24),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
               child: Column(
                 children: [
                   Text(
@@ -71,18 +72,41 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         ?.copyWith(color: Colors.white),
                   ),
                   const SizedBox(height: 32),
-                  ElevatedButton.icon(
-                    onPressed: () => Navigator.pushNamed(context, '/calendar'),
-                    icon: const Icon(Icons.calendar_today),
-                    label: const Text('View Calendar'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.red[600],
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 16,
+                  Image.asset('assets/images/phone_mockups.png', width: 300),
+                  const SizedBox(height: 32),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Image.asset(
+                          'assets/images/app_store_badge.png',
+                          width: 150,
+                        ),
+                        onPressed: () async {
+                          const appStoreUrl = 'https://apps.apple.com/us/app/lights-out-and-away-we-go/id6575374255';
+                          if (await canLaunchUrl(Uri.parse(appStoreUrl))) {
+                            await launchUrl(Uri.parse(appStoreUrl));
+                          } else {
+                            throw 'Could not launch $appStoreUrl';
+                          }
+                        },
                       ),
-                    ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        icon: Image.asset(
+                          'assets/images/google_play_badge.png',
+                          width: 150,
+                        ),
+                        onPressed: () async {
+                          const appStoreUrl = 'https://play.google.com/store/apps/details?id=za.co.moodytech.lights_out';
+                          if (await canLaunchUrl(Uri.parse(appStoreUrl))) {
+                            await launchUrl(Uri.parse(appStoreUrl));
+                          } else {
+                            throw 'Could not launch $appStoreUrl';
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

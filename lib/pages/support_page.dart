@@ -5,7 +5,6 @@ import '../widgets/app_layout.dart';
 class SupportPage extends StatelessWidget {
   const SupportPage({super.key});
 
-  // Create a function to send an email
   void _sendEmail(String name, String email, String message) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
@@ -13,8 +12,8 @@ class SupportPage extends StatelessWidget {
       query: 'subject=Support Request&body=Name: $name\nEmail: $email\nMessage: $message',
     );
 
-    if (await canLaunch(emailUri.toString())) {
-      await launch(emailUri.toString());
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
     } else {
       throw 'Could not launch $emailUri';
     }
