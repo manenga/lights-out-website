@@ -1,10 +1,13 @@
-name: Deploy Flutter Web App to GitHub Pages
+name: Deploy Website
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write 
+  
 jobs:
   build:
     runs-on: ubuntu-latest
