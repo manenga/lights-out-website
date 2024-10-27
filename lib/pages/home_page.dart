@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ),
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Never Miss a Race',

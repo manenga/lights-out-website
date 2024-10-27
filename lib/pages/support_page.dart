@@ -26,7 +26,7 @@ class SupportPageState extends State<SupportPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
-    // Simple regex for email validation
+    
     const String emailPattern =
         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
     final RegExp regex = RegExp(emailPattern);

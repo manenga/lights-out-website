@@ -21,7 +21,7 @@ class AppLayout extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lights Out'),
+        title: const Text('Lights Out And Away We Go'),
         backgroundColor: Colors.grey[900],
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
