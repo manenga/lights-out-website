@@ -1,15 +1,30 @@
-name: Deploy Website
+# Author: Manenga Mungandi
+# GitHub: https://github.com/manenga/
+# Created On: 27 Oct, 2024
+
+name: Deploy Lights Out
 
 on:
   push:
     branches:
       - main
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 permissions:
-  contents: write 
-  
+  contents: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
@@ -25,11 +40,16 @@ jobs:
         run: flutter pub get
 
       - name: Build the web app
-        run: flutter build web --release
+        run: flutter build web --base-href /${{ github.event.repository.name }}/
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-          publish_branch: gh-pages
+          path: 'build/web'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
