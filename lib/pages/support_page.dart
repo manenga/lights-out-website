@@ -41,9 +41,9 @@ class SupportPageState extends State<SupportPage> {
   void _sendEmail() async {
     if (_formKey.currentState!.validate()) {
       await _sendEmailRequest();
-      // nameController.clear();
-      // emailController.clear();
-      // messageController.clear();
+      nameController.clear();
+      emailController.clear();
+      messageController.clear();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
