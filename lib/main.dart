@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     
     return MaterialApp(
-      title: 'Lights Out Away We Go',
+      title: 'Lights Out',
       theme: ThemeData(
         primaryColor: Colors.red[600],
         colorScheme: ColorScheme.fromSeed(
@@ -41,30 +41,23 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/calendar': (context) => const CalendarPage(),
-        '/support': (context) => const SupportPage(),
-        '/privacy': (context) => const PrivacyPage(),
-        '/terms': (context) => const TermsPage(),
-      },
-      // Custom navigation logic
       onGenerateRoute: (settings) {
-        final currentRoute = ModalRoute.of(context)?.settings.name;
-        if (currentRoute == settings.name) {
-          return null; // Prevent navigation to the same page
-        }
         final Widget page = _getPageForRoute(settings.name ?? '/');
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => page,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOutCubic;
+            const begin = 0.0;
+            const end = 1.0;
+            const curve = Curves.easeInOut;
+
             var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            var offsetAnimation = animation.drive(tween);
-            return SlideTransition(position: offsetAnimation, child: child);
+            var opacityAnimation = animation.drive(tween);
+
+            return FadeTransition(
+              opacity: opacityAnimation,
+              child: child,
+            );
           },
           transitionDuration: const Duration(milliseconds: 500),
         );

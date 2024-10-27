@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Footer extends StatelessWidget {
-  const Footer({super.key});
+  final String currentRoute;
+
+  const Footer({super.key, required this.currentRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +33,17 @@ class Footer extends StatelessWidget {
               ],
             ),
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/support'),
+              onPressed: currentRoute == '/support' ? null : () => Navigator.pushNamed(context, '/support'),
               child: const Text('Support', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/privacy'),
-                child: const Text('Privacy Policy', style: TextStyle(color: Colors.white)),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/terms'),
-                child: const Text('Terms And Conditions', style: TextStyle(color: Colors.white)),
-              ),
+              onPressed: currentRoute == '/privacy' ? null : () => Navigator.pushNamed(context, '/privacy'),
+              child: const Text('Privacy Policy', style: TextStyle(color: Colors.white)),
+            ),
+            TextButton(
+              onPressed: currentRoute == '/terms' ? null : () => Navigator.pushNamed(context, '/terms'),
+              child: const Text('Terms And Conditions', style: TextStyle(color: Colors.white)),
+            ),
           ],
         ),
       ),

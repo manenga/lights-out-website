@@ -8,6 +8,7 @@ class PrivacyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppLayout(
         title: 'Privacy Policy',
+        currentRoute: '/privacy',
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(24.0),

@@ -6,11 +6,13 @@ import 'footer.dart';
 class AppLayout extends StatelessWidget {
   final Widget child;
   final String title;
+  final String currentRoute;
 
   const AppLayout({
     super.key,
     required this.child,
     required this.title,
+    required this.currentRoute,
   });
 
   @override
@@ -19,7 +21,7 @@ class AppLayout extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lights Out Away We Go'),
+        title: const Text('Lights Out'),
         backgroundColor: Colors.red[600],
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -29,11 +31,11 @@ class AppLayout extends StatelessWidget {
             onPressed: () => themeProvider.toggleTheme(),
           ),
           TextButton(
-            onPressed: () => Navigator.pushNamed(context, '/'),
+            onPressed: () => currentRoute == '/' ? null : Navigator.pushNamed(context, '/'),
             child: const Text('Home', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
-            onPressed: () => Navigator.pushNamed(context, '/calendar'),
+            onPressed: () => currentRoute == '/calendar' ? null : Navigator.pushNamed(context, '/calendar'),
             child: const Text('Calendar', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -53,7 +55,7 @@ class AppLayout extends StatelessWidget {
               ),
             ),
           ),
-          const Footer(), // Footer will be pushed to the bottom
+         Footer(currentRoute: currentRoute),
         ],
       ),
     );

@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
     return AppLayout(
       title: 'Home',
+      currentRoute: '/',
       child: Column(
         children: [
           FadeTransition(

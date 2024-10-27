@@ -28,6 +28,7 @@ class SupportPage extends StatelessWidget {
 
     return AppLayout(
       title: 'Support',
+      currentRoute: '/support',
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),

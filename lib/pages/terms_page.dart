@@ -8,6 +8,7 @@ class TermsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppLayout(
       title: 'Terms and Conditions',
+      currentRoute: '/terms',
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

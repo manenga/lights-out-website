@@ -22,6 +22,7 @@ class _CalendarPageState extends State<CalendarPage> {
     
     return AppLayout(
       title: 'Race Calendar',
+      currentRoute: '/calendar',
       child: Column(
         children: [
           Card(
