@@ -17,6 +17,7 @@ class SupportPageState extends State<SupportPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
   bool isButtonEnabled = false;
+  bool isLoading = false;
 
   void _onFieldChanged() {
     setState(() {
@@ -40,6 +41,10 @@ class SupportPageState extends State<SupportPage> {
 
   void _sendEmail() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
       await _sendEmailRequest();
       nameController.clear();
       emailController.clear();
@@ -81,15 +86,24 @@ class SupportPageState extends State<SupportPage> {
         if (kDebugMode) {
           print('Response data: ${response.body}');
         }
+        setState(() {
+          isLoading = false;
+        });
       } else {
         if (kDebugMode) {
           print('❌ Failed to send message. Status code: ${response.statusCode}');
         }
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       if (kDebugMode) {
         print('❌ Error sending email: $e');
       }
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -158,13 +172,15 @@ class SupportPageState extends State<SupportPage> {
                         ),
                         const SizedBox(height: 24),
                         ElevatedButton(
-                          onPressed: isButtonEnabled ? _sendEmail : null,
+                          onPressed: isButtonEnabled && !isLoading ? _sendEmail : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red[600],
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
-                          child: const Text('Send Message'),
+                          child: isLoading 
+                            ? CircularProgressIndicator() // Show loader
+                            : const Text('Send Message'),
                         ),
                       ],
                     ),
