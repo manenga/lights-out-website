@@ -2,29 +2,66 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/app_layout.dart';
 
-class SupportPage extends StatelessWidget {
+class SupportPage extends StatefulWidget {
   const SupportPage({super.key});
 
-  void _sendEmail(String name, String email, String message) async {
-    final Uri emailUri = Uri(
-      scheme: 'mailto',
-      path: 'info@moodytech.co.za',
-      query: 'subject=Support Request&body=Name: $name\nEmail: $email\nMessage: $message',
-    );
+  @override
+  SupportPageState createState() => SupportPageState();
+}
 
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri);
+class SupportPageState extends State<SupportPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
+  bool isButtonEnabled = false;
+
+  void _onFieldChanged() {
+    setState(() {
+      isButtonEnabled = _formKey.currentState?.validate() ?? false;
+    });
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email';
+    }
+    // Simple regex for email validation
+    const String emailPattern =
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+    final RegExp regex = RegExp(emailPattern);
+    if (!regex.hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  void _sendEmail() async {
+    if (_formKey.currentState!.validate()) {
+      final Uri emailUri = Uri(
+        scheme: 'mailto',
+        path: 'info@moodytech.co.za',
+        query:
+            'subject=Support Request&body=Name: ${nameController.text}\nEmail: ${emailController.text}\nMessage: ${messageController.text}',
+      );
+
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri);
+        nameController.clear();
+        emailController.clear();
+        messageController.clear();
+      } else {
+        throw 'Could not launch $emailUri';
+      }
     } else {
-      throw 'Could not launch $emailUri';
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController messageController = TextEditingController();
-
     return AppLayout(
       title: 'Support',
       currentRoute: '/support',
@@ -41,50 +78,65 @@ class SupportPage extends StatelessWidget {
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextField(
-                        controller: nameController, // Assign controller
-                        decoration: const InputDecoration(
-                          labelText: 'Name',
-                          border: OutlineInputBorder(),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextFormField(
+                          controller: nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Name',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (_) => _onFieldChanged(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: emailController, // Assign controller
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (_) => _onFieldChanged(),
+                          validator: _validateEmail,
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: messageController, // Assign controller
-                        decoration: const InputDecoration(
-                          labelText: 'Message',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: messageController,
+                          decoration: const InputDecoration(
+                            labelText: 'Message',
+                            border: OutlineInputBorder(),
+                          ),
+                          maxLines: 4,
+                          onChanged: (_) =>
+                              _onFieldChanged(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your message';
+                            }
+                            return null; // Return null if valid
+                          },
                         ),
-                        maxLines: 4,
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: () {
-                          _sendEmail(
-                            nameController.text,
-                            emailController.text,
-                            messageController.text,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[600],
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: isButtonEnabled ? _sendEmail : null,
+                
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[600],
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text('Send Message'),
                         ),
-                        child: const Text('Send Message'),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
