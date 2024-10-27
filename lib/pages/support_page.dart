@@ -1,6 +1,8 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../widgets/app_layout.dart';
+import 'package:http/http.dart' as http;
 
 class SupportPage extends StatefulWidget {
   const SupportPage({super.key});
@@ -26,7 +28,7 @@ class SupportPageState extends State<SupportPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
-    
+
     const String emailPattern =
         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
     final RegExp regex = RegExp(emailPattern);
@@ -38,25 +40,56 @@ class SupportPageState extends State<SupportPage> {
 
   void _sendEmail() async {
     if (_formKey.currentState!.validate()) {
-      final Uri emailUri = Uri(
-        scheme: 'mailto',
-        path: 'info@moodytech.co.za',
-        query:
-            'subject=Support Request&body=Name: ${nameController.text}\nEmail: ${emailController.text}\nMessage: ${messageController.text}',
-      );
+      await _sendEmailRequest();
+      // nameController.clear();
+      // emailController.clear();
+      // messageController.clear();
 
-      if (await canLaunchUrl(emailUri)) {
-        await launchUrl(emailUri);
-        nameController.clear();
-        emailController.clear();
-        messageController.clear();
-      } else {
-        throw 'Could not launch $emailUri';
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Message sent successfully')),
+        );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
       );
+    }
+  }
+
+  Future<void> _sendEmailRequest() async {
+    const String url =
+        'https://qtawcctxamlwsfbxfddl.supabase.co/functions/v1/send-contact-email';
+
+    final Map<String, String> messageBody = {
+      'name': nameController.text,
+      'email': emailController.text,
+      'message': messageController.text
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(messageBody),
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print('Response data: ${response.body}');
+        }
+      } else {
+        if (kDebugMode) {
+          print('❌ Failed to send message. Status code: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Error sending email: $e');
+      }
     }
   }
 
@@ -115,8 +148,7 @@ class SupportPageState extends State<SupportPage> {
                             border: OutlineInputBorder(),
                           ),
                           maxLines: 4,
-                          onChanged: (_) =>
-                              _onFieldChanged(),
+                          onChanged: (_) => _onFieldChanged(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your message';
@@ -127,7 +159,6 @@ class SupportPageState extends State<SupportPage> {
                         const SizedBox(height: 24),
                         ElevatedButton(
                           onPressed: isButtonEnabled ? _sendEmail : null,
-                
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red[600],
                             foregroundColor: Colors.white,
