@@ -27,7 +27,7 @@ class AppLayout extends StatelessWidget {
             children: [
               Image.asset('assets/images/logo.png', width: 32, height: 32),
               const SizedBox(width: 10),
-              const Text('Lights Out And Away We Go'),
+              const Text('Lights Out'),
             ],
           ),
         ),
