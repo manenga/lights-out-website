@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/race_provider.dart';
 import '../widgets/app_layout.dart';
+import '../widgets/upcoming_races.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -122,55 +123,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               parent: _controller,
               curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
             )),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Upcoming Races',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 16),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: raceProvider.races.length,
-                      itemBuilder: (context, index) {
-                        final race = raceProvider.races[index];
-                        return Card(
-                          child: ListTile(
-                            leading: Text(
-                              race.flagEmoji,
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                            title: Text(race.name),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(race.circuit),
-                                Text(
-                                  '${race.date.day}/${race.date.month}/${race.date.year}',
-                                  style: TextStyle(color: Colors.grey[600]),
-                                ),
-                              ],
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(
-                                race.isFavorite ? Icons.star : Icons.star_border,
-                                color: race.isFavorite ? Colors.amber : null,
-                              ),
-                              onPressed: () => raceProvider.toggleFavorite(index),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: UpcomingRacesWidget(raceProvider: raceProvider),
           ),
         ],
       ),

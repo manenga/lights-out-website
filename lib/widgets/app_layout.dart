@@ -21,7 +21,16 @@ class AppLayout extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lights Out And Away We Go'),
+        title: GestureDetector(
+          onTap: () => currentRoute == '/' ? null : Navigator.pushNamed(context, '/'),
+          child: Row(
+            children: [
+              Image.asset('assets/images/logo.png', width: 32, height: 32),
+              const SizedBox(width: 10),
+              const Text('Lights Out And Away We Go'),
+            ],
+          ),
+        ),
         backgroundColor: Colors.grey[900],
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,

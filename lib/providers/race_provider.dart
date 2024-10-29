@@ -34,6 +34,7 @@ class RaceProvider with ChangeNotifier {
   ];
 
   List<Race> get races => _races;
+  List<Race> get upcomingRaces => _races.where((race) => race.date.isAfter(DateTime.now())).toList();
 
   void toggleFavorite(int index) {
     _races[index].isFavorite = !_races[index].isFavorite;

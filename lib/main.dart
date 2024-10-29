@@ -8,8 +8,10 @@ import 'pages/privacy_page.dart';
 import 'pages/terms_page.dart';
 import 'pages/calendar_page.dart';
 import 'pages/support_page.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [
