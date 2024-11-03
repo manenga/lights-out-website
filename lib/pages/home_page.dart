@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ).animate(CurvedAnimation(
               parent: _controller,
               curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
-            )),
+            )), 
             child: UpcomingRacesWidget(raceProvider: raceProvider),
           ),
         ],
