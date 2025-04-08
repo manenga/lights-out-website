@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../theme/theme_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lights_out_website/blocs/theme/theme_state.dart';
+import '../blocs/theme/theme_bloc.dart';
 import 'footer.dart';
 
 class AppLayout extends StatelessWidget {
@@ -17,8 +18,6 @@ class AppLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -35,9 +34,13 @@ class AppLayout extends StatelessWidget {
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            icon: Icon(themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () => themeProvider.toggleTheme(),
+          BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, state) {
+              return IconButton(
+                icon: Icon(state.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+                onPressed: () => context.read<ThemeBloc>().add(ToggleThemeEvent()),
+              );
+            },
           ),
           TextButton(
             onPressed: () => currentRoute == '/' ? null : Navigator.pushNamed(context, '/'),

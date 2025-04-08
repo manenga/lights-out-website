@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lights_out_website/blocs/race/race_state.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../providers/race_provider.dart';
+import '../blocs/race/race_bloc.dart';
 import '../widgets/app_layout.dart';
 import '../widgets/upcoming_races.dart';
 
@@ -38,8 +39,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final raceProvider = Provider.of<RaceProvider>(context);
-
     return AppLayout(
       title: 'Home',
       currentRoute: '/',
@@ -115,15 +114,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ),
           ),
           const SizedBox(height: 32),
-          SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.5),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
-              parent: _controller,
-              curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
-            )), 
-            child: UpcomingRacesWidget(raceProvider: raceProvider),
+          BlocBuilder<RaceBloc, RaceState>(
+            builder: (context, state) {
+              if (state is RaceLoaded && state.races.any((race) => race.date.isAfter(DateTime.now()))) {
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 0.5),
+                    end: Offset.zero,
+                  ).animate(CurvedAnimation(
+                    parent: _controller,
+                    curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+                  )), 
+                  child: const UpcomingRacesWidget(),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
         ],
       ),

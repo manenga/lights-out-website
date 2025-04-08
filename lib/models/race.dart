@@ -1,17 +1,21 @@
 class Race {
   final String name;
-  final String circuit;
+  final String circuitId;
   final DateTime date;
-  final String country;
-  final String flagEmoji;
   bool isFavorite;
-
+  
   Race({
     required this.name,
-    required this.circuit,
+    required this.circuitId,
     required this.date,
-    required this.country,
-    required this.flagEmoji,
     this.isFavorite = false,
   });
+
+  factory Race.fromJson(Map<String, dynamic> json) {
+    return Race(
+      name: json['race_name'] as String,
+      circuitId: json['circuit_id'] as String,
+      date: DateTime.parse(json['race_date_time'] as String),
+    );
+  }
 }
