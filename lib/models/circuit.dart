@@ -1,3 +1,5 @@
+import 'package:lights_out_website/utils/country_utils.dart';
+
 class Circuit {
   final int id;
   final String ref;
@@ -12,6 +14,10 @@ class Circuit {
     required this.location,
     required this.country,
   });
+
+  String get flagEmoji {
+    return CountryUtils.getFlagEmoji(country);
+  }
 
   factory Circuit.fromJson(Map<String, dynamic> json) {
     return Circuit(

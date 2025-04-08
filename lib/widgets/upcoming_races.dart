@@ -162,10 +162,10 @@ class UpcomingRacesWidget extends StatelessWidget {
 
                             return Card(
                               child: ListTile(
-                                // leading: Text(
-                                //   circuit.flagEmoji,
-                                //   style: const TextStyle(fontSize: 32),
-                                // ),
+                                leading: Text(
+                                  circuit.flagEmoji,
+                                  style: const TextStyle(fontSize: 32),
+                                ),
                                 title: Text(
                                   race.name, 
                                   style: Theme.of(context).textTheme.displaySmall?.copyWith(

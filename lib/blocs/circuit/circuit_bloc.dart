@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/circuit.dart';
 import '../../services/supabase_service.dart';
 import 'circuit_event.dart';
 import 'circuit_state.dart';
